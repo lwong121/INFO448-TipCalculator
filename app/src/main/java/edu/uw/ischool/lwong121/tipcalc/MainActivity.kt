@@ -9,7 +9,6 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
     private var tipPct: Double = 0.0
@@ -22,14 +21,13 @@ class MainActivity : AppCompatActivity() {
         val radioGroup = findViewById<RadioGroup>(R.id.radioGroup)
         val radioFifteen = findViewById<RadioButton>(R.id.radioFifteen)
 
+        // defaults
         btnTip.isEnabled = false
-        // select 15% as the default
         radioFifteen.isChecked = true
         tipPct = 0.15
 
         editText.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
@@ -44,8 +42,13 @@ class MainActivity : AppCompatActivity() {
                     editText.text.clear()
                     btnTip.isEnabled = false
                 } else {
-                    // add the $ to the string
-                    val formattedAmount = "$$amountStr"
+                    // add the $ to the string + **Extra Credit**: Only show 2 decimal places
+                    val formattedAmount =
+                        if (amountStr.contains(".") && amountStr.substringAfter(".").length > 2) {
+                            "$${amountStr.substring(0, amountStr.indexOf(".") + 3)}"
+                        } else {
+                            "$${amountStr}"
+                        }
                     editText.setText(formattedAmount)
                     editText.setSelection(formattedAmount.length)
                 }
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
-        // Extra Credit: Add a control to choose the tip amount
+        // **Extra Credit**: Add a control to choose the tip amount
         radioGroup.setOnCheckedChangeListener { _, radioId ->
             // update the selected tipPct state
             tipPct = when (radioId) {
@@ -70,8 +73,7 @@ class MainActivity : AppCompatActivity() {
         btnTip.setOnClickListener {
             // get the amount input in currency form
             val amountStr = editText.text.toString().replace("$", "")
-            var amount = amountStr.toDouble()
-            amount = (amount * 100.0).roundToInt() / 100.0
+            val amount = amountStr.toDouble()
 
             // update the value seen in the EditText box to only have 2 decimal places
             editText.setText(String.format("$%.2f", amount))

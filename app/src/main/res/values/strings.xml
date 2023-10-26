@@ -2,6 +2,7 @@
     <string name="app_name">TipCalc</string>
     <string name="edit_text_label">Amount</string>
     <string name="button_label">Tip</string>
+    <!--  Extra Credit  -->
     <string name="ten_pct_label">10%</string>
     <string name="fifteen_pct_label">15%</string>
     <string name="eighteen_pct_label">18%</string>
